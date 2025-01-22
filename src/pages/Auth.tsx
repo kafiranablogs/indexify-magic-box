@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 const Auth = () => {
@@ -14,6 +14,12 @@ const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const validateEmail = (email: string) => {
+    // RFC 5322 compliant email regex
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    return emailRegex.test(email) && email.includes('.') && email.split('@')[1].length > 3;
+  };
+
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
@@ -21,6 +27,15 @@ const Auth = () => {
         variant: "destructive",
         title: "Error signing in",
         description: "Please enter both email and password.",
+      });
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
       });
       return;
     }
@@ -72,6 +87,15 @@ const Auth = () => {
       return;
     }
 
+    if (!validateEmail(email)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
+      });
+      return;
+    }
+
     if (password.length < 6) {
       toast({
         variant: "destructive",
@@ -86,9 +110,6 @@ const Auth = () => {
       const { error } = await supabase.auth.signUp({
         email: email.trim(),
         password: password.trim(),
-        options: {
-          emailRedirectTo: window.location.origin,
-        },
       });
 
       if (error) {
