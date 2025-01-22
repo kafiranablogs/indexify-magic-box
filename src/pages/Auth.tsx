@@ -15,7 +15,6 @@ const Auth = () => {
   const { toast } = useToast();
 
   const validateEmail = (email: string) => {
-    // Basic email validation
     return email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
   };
 
@@ -109,9 +108,6 @@ const Auth = () => {
       const { error } = await supabase.auth.signUp({
         email: email.trim(),
         password: password.trim(),
-        options: {
-          emailRedirectTo: window.location.origin,
-        }
       });
 
       if (error) {
