@@ -16,20 +16,28 @@ const Auth = () => {
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !password) {
+      toast({
+        variant: "destructive",
+        title: "Error signing in",
+        description: "Please enter both email and password.",
+      });
+      return;
+    }
+
     try {
       setLoading(true);
       const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: email.trim(),
+        password: password.trim(),
       });
-      
+
       if (error) {
-        console.error("Sign in error:", error);
         if (error.message === "Invalid login credentials") {
           toast({
             variant: "destructive",
             title: "Sign in failed",
-            description: "Invalid email or password. If you haven't registered yet, please sign up first.",
+            description: "Invalid email or password. Please check your credentials or sign up if you haven't already.",
           });
         } else {
           toast({
@@ -40,14 +48,13 @@ const Auth = () => {
         }
         return;
       }
-      
+
       navigate("/");
     } catch (error: any) {
-      console.error("Unexpected error:", error);
       toast({
         variant: "destructive",
         title: "Error signing in",
-        description: error.message,
+        description: "An unexpected error occurred. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -56,6 +63,15 @@ const Auth = () => {
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !password) {
+      toast({
+        variant: "destructive",
+        title: "Error signing up",
+        description: "Please enter both email and password.",
+      });
+      return;
+    }
+
     if (password.length < 6) {
       toast({
         variant: "destructive",
@@ -64,47 +80,36 @@ const Auth = () => {
       });
       return;
     }
-    
+
     try {
       setLoading(true);
       const { error } = await supabase.auth.signUp({
-        email,
-        password,
+        email: email.trim(),
+        password: password.trim(),
         options: {
           emailRedirectTo: window.location.origin,
-        }
+        },
       });
-      
+
       if (error) {
-        console.error("Sign up error:", error);
-        if (error.message.includes("anonymous_provider_disabled")) {
-          toast({
-            variant: "destructive",
-            title: "Sign up failed",
-            description: "Please provide both email and password to create an account.",
-          });
-        } else {
-          toast({
-            variant: "destructive",
-            title: "Error signing up",
-            description: error.message,
-          });
-        }
+        toast({
+          variant: "destructive",
+          title: "Error signing up",
+          description: error.message,
+        });
         return;
       }
-      
+
       toast({
         title: "Success!",
         description: "Please check your email for the confirmation link.",
       });
-      // Switch back to sign in mode after successful signup
       setIsSignUp(false);
     } catch (error: any) {
-      console.error("Unexpected error:", error);
       toast({
         variant: "destructive",
         title: "Error signing up",
-        description: error.message,
+        description: "An unexpected error occurred. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -131,6 +136,7 @@ const Auth = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="Enter your email"
+              disabled={loading}
             />
           </div>
           <div className="space-y-2">
@@ -142,6 +148,7 @@ const Auth = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder={isSignUp ? "Choose a password (min. 6 characters)" : "Enter your password"}
+              disabled={loading}
             />
           </div>
           <div className="space-y-4">
@@ -150,13 +157,14 @@ const Auth = () => {
               className="w-full"
               disabled={loading}
             >
-              {isSignUp ? "Sign Up" : "Sign In"}
+              {loading ? "Loading..." : (isSignUp ? "Sign Up" : "Sign In")}
             </Button>
             <div className="text-center text-sm">
               <button
                 type="button"
                 className="text-primary hover:underline"
                 onClick={() => setIsSignUp(!isSignUp)}
+                disabled={loading}
               >
                 {isSignUp ? "Already have an account? Sign In" : "Need an account? Sign Up"}
               </button>
