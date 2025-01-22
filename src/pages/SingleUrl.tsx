@@ -1,15 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 export default function SingleUrl() {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Authentication required",
+          description: "Please sign in to submit URLs",
+          variant: "destructive",
+        });
+        navigate("/auth");
+      }
+    };
+    
+    checkAuth();
+  }, [navigate, toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,14 +56,20 @@ export default function SingleUrl() {
     try {
       setIsLoading(true);
       
+      // Get current user
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session?.user?.id) {
+        throw new Error("No authenticated user found");
+      }
+
       const { error } = await supabase
         .from('url_submissions')
-        .insert([
-          { 
-            url,
-            status: 'pending'
-          }
-        ]);
+        .insert({
+          url,
+          user_id: session.user.id,
+          status: 'pending'
+        });
 
       if (error) throw error;
 
