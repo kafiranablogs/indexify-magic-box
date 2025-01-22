@@ -15,9 +15,8 @@ const Auth = () => {
   const { toast } = useToast();
 
   const validateEmail = (email: string) => {
-    // RFC 5322 compliant email regex
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-    return emailRegex.test(email) && email.includes('.') && email.split('@')[1].length > 3;
+    // Basic email validation
+    return email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
   };
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
@@ -110,6 +109,9 @@ const Auth = () => {
       const { error } = await supabase.auth.signUp({
         email: email.trim(),
         password: password.trim(),
+        options: {
+          emailRedirectTo: window.location.origin,
+        }
       });
 
       if (error) {
