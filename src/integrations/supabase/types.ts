@@ -30,6 +30,44 @@ export type Database = {
         }
         Relationships: []
       }
+      url_submissions: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          status: Database["public"]["Enums"]["url_status"] | null
+          updated_at: string
+          url: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          status?: Database["public"]["Enums"]["url_status"] | null
+          updated_at?: string
+          url: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          status?: Database["public"]["Enums"]["url_status"] | null
+          updated_at?: string
+          url?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "url_submissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -38,7 +76,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      url_status: "pending" | "success" | "failed"
     }
     CompositeTypes: {
       [_ in never]: never

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function SingleUrl() {
   const [url, setUrl] = useState("");
@@ -21,19 +22,41 @@ export default function SingleUrl() {
       return;
     }
 
+    // Basic URL validation
+    try {
+      new URL(url); // This will throw an error if URL is invalid
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid URL",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
-      // API integration will go here
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      
+      const { error } = await supabase
+        .from('url_submissions')
+        .insert([
+          { 
+            url,
+            status: 'pending'
+          }
+        ]);
+
+      if (error) throw error;
+
       toast({
         title: "Success",
         description: "URL has been submitted for indexing",
       });
       setUrl("");
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to submit URL for indexing",
+        description: error.message || "Failed to submit URL for indexing",
         variant: "destructive",
       });
     } finally {
