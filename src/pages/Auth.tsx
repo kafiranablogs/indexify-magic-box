@@ -10,6 +10,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -21,7 +22,24 @@ const Auth = () => {
         email,
         password,
       });
-      if (error) throw error;
+      
+      if (error) {
+        if (error.message === "Invalid login credentials") {
+          toast({
+            variant: "destructive",
+            title: "Sign in failed",
+            description: "Invalid email or password. If you haven't registered yet, please sign up first.",
+          });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Error signing in",
+            description: error.message,
+          });
+        }
+        return;
+      }
+      
       navigate("/");
     } catch (error: any) {
       toast({
@@ -36,17 +54,30 @@ const Auth = () => {
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (password.length < 6) {
+      toast({
+        variant: "destructive",
+        title: "Invalid password",
+        description: "Password must be at least 6 characters long",
+      });
+      return;
+    }
+    
     try {
       setLoading(true);
       const { error } = await supabase.auth.signUp({
         email,
         password,
       });
+      
       if (error) throw error;
+      
       toast({
         title: "Success!",
-        description: "Check your email for the confirmation link.",
+        description: "Please check your email for the confirmation link.",
       });
+      // Switch back to sign in mode after successful signup
+      setIsSignUp(false);
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -77,11 +108,13 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-md space-y-8 p-8">
         <div className="text-center">
-          <h2 className="text-2xl font-bold">Welcome</h2>
-          <p className="text-muted-foreground mt-2">Sign in or create an account</p>
+          <h2 className="text-2xl font-bold">{isSignUp ? "Create Account" : "Welcome Back"}</h2>
+          <p className="text-muted-foreground mt-2">
+            {isSignUp ? "Sign up to get started" : "Sign in to your account"}
+          </p>
         </div>
 
-        <form onSubmit={handleEmailSignIn} className="space-y-6">
+        <form onSubmit={isSignUp ? handleEmailSignUp : handleEmailSignIn} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -90,6 +123,7 @@ const Auth = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              placeholder="Enter your email"
             />
           </div>
           <div className="space-y-2">
@@ -100,6 +134,7 @@ const Auth = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              placeholder={isSignUp ? "Choose a password (min. 6 characters)" : "Enter your password"}
             />
           </div>
           <div className="space-y-4">
@@ -108,17 +143,17 @@ const Auth = () => {
               className="w-full"
               disabled={loading}
             >
-              Sign In
+              {isSignUp ? "Sign Up" : "Sign In"}
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={handleEmailSignUp}
-              disabled={loading}
-            >
-              Sign Up
-            </Button>
+            <div className="text-center text-sm">
+              <button
+                type="button"
+                className="text-primary hover:underline"
+                onClick={() => setIsSignUp(!isSignUp)}
+              >
+                {isSignUp ? "Already have an account? Sign In" : "Need an account? Sign Up"}
+              </button>
+            </div>
           </div>
         </form>
 
