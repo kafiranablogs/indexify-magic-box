@@ -46,7 +46,13 @@ const Auth = () => {
       });
 
       if (error) {
-        if (error.message === "Invalid login credentials") {
+        if (error.message === "Email not confirmed") {
+          toast({
+            variant: "destructive",
+            title: "Email not confirmed",
+            description: "Please check your email for the confirmation link or contact support to enable your account.",
+          });
+        } else if (error.message === "Invalid login credentials") {
           toast({
             variant: "destructive",
             title: "Sign in failed",
