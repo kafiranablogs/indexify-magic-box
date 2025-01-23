@@ -166,12 +166,12 @@ export default function GoogleConfig() {
               Create a service account and download the JSON credentials file:
             </p>
             <ol className="list-decimal list-inside space-y-2 ml-4 text-gray-600">
-              <li>Go to "IAM & Admin" > "Service Accounts"</li>
-              <li>Click "Create Service Account"</li>
-              <li>Fill in the service account details</li>
-              <li>Grant "Owner" role to the service account</li>
-              <li>Click "Create Key" (JSON format)</li>
-              <li>Save the downloaded JSON file</li>
+                <li>Go to "IAM & Admin" {'->'} "Service Accounts"</li>
+                <li>Click "Create Service Account"</li>
+                <li>Fill in the service account details</li>
+                <li>Grant "Owner" role to the service account</li>
+                <li>Click "Create Key" (JSON format)</li>
+                <li>Save the downloaded JSON file</li>
             </ol>
             <a 
               href="https://console.cloud.google.com/iam-admin/serviceaccounts" 
