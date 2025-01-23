@@ -4,9 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, CheckCircle, XCircle } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 
 export default function GoogleConfig() {
   const [projectId, setProjectId] = useState("");
@@ -105,7 +106,7 @@ export default function GoogleConfig() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Google Indexing API Configuration</h1>
         {credentials && (
@@ -121,8 +122,74 @@ export default function GoogleConfig() {
           </div>
         )}
       </div>
+
+      <Card className="p-6">
+        <h2 className="text-xl font-bold mb-4">Step-by-Step Setup Guide</h2>
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">1. Create a Google Cloud Project</h3>
+            <p className="text-gray-600">
+              Visit the Google Cloud Console and create a new project or select an existing one.
+            </p>
+            <a 
+              href="https://console.cloud.google.com/projectcreate" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:text-blue-600 inline-flex items-center gap-1"
+            >
+              Go to Google Cloud Console <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">2. Enable the Indexing API</h3>
+            <p className="text-gray-600">
+              Enable the Indexing API for your project in the Google Cloud Console.
+            </p>
+            <a 
+              href="https://console.cloud.google.com/apis/library/indexing.googleapis.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:text-blue-600 inline-flex items-center gap-1"
+            >
+              Enable Indexing API <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">3. Create Service Account</h3>
+            <p className="text-gray-600">
+              Create a service account and download the JSON credentials file:
+            </p>
+            <ol className="list-decimal list-inside space-y-2 ml-4 text-gray-600">
+              <li>Go to "IAM & Admin" > "Service Accounts"</li>
+              <li>Click "Create Service Account"</li>
+              <li>Fill in the service account details</li>
+              <li>Grant "Owner" role to the service account</li>
+              <li>Click "Create Key" (JSON format)</li>
+              <li>Save the downloaded JSON file</li>
+            </ol>
+            <a 
+              href="https://console.cloud.google.com/iam-admin/serviceaccounts" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:text-blue-600 inline-flex items-center gap-1"
+            >
+              Manage Service Accounts <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+      </Card>
       
       <Card className="p-6">
+        <h2 className="text-xl font-bold mb-4">Enter Your Credentials</h2>
+        <p className="text-gray-600 mb-4">
+          Enter the details from your downloaded service account JSON file:
+        </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="projectId">Project ID</Label>
@@ -173,14 +240,25 @@ export default function GoogleConfig() {
       </Card>
 
       <Card className="p-6">
-        <h2 className="text-xl font-bold mb-4">Setup Instructions</h2>
-        <ol className="list-decimal list-inside space-y-2">
-          <li>Go to the Google Cloud Console</li>
-          <li>Create a new project or select an existing one</li>
-          <li>Enable the Indexing API for your project</li>
-          <li>Create a service account and download the JSON key</li>
-          <li>Enter the Project ID, Client Email, and Private Key from the JSON file above</li>
-        </ol>
+        <h2 className="text-xl font-bold mb-4">Additional Resources</h2>
+        <div className="space-y-2">
+          <a 
+            href="https://developers.google.com/search/apis/indexing-api/v3/quickstart"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:text-blue-600 inline-flex items-center gap-1"
+          >
+            Google Indexing API Documentation <ExternalLink className="h-4 w-4" />
+          </a>
+          <a 
+            href="https://console.cloud.google.com/apis/credentials"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:text-blue-600 inline-flex items-center gap-1"
+          >
+            Google Cloud Console Credentials <ExternalLink className="h-4 w-4" />
+          </a>
+        </div>
       </Card>
     </div>
   );
