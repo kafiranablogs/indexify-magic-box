@@ -1,10 +1,10 @@
-import { BarChart, Link, Upload, User } from "lucide-react";
+import { BarChart, Link, Upload, Settings } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -15,7 +15,7 @@ const menuItems = [
   { title: "Dashboard", icon: BarChart, path: "/" },
   { title: "Single URL", icon: Link, path: "/single-url" },
   { title: "Bulk Upload", icon: Upload, path: "/bulk-upload" },
-  { title: "Profile", icon: User, path: "/profile" },
+  { title: "Google Config", icon: Settings, path: "/google-config" },
 ];
 
 export function AppSidebar() {
