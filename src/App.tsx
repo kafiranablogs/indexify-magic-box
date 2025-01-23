@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import SingleUrl from "./pages/SingleUrl";
 import BulkUpload from "./pages/BulkUpload";
 import GoogleConfig from "./pages/GoogleConfig";
+import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import { useEffect, useState } from "react";
 import { supabase } from "./integrations/supabase/client";
@@ -36,7 +37,7 @@ const App = () => {
   }, []);
 
   if (loading) {
-    return null; // Or a loading spinner
+    return null;
   }
 
   return (
@@ -82,6 +83,16 @@ const App = () => {
                 element={
                   session ? (
                     <GoogleConfig />
+                  ) : (
+                    <Navigate to="/auth" replace />
+                  )
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  session ? (
+                    <Profile />
                   ) : (
                     <Navigate to="/auth" replace />
                   )
