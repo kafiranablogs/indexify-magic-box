@@ -7,6 +7,7 @@ import { Layout } from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import SingleUrl from "./pages/SingleUrl";
 import BulkUpload from "./pages/BulkUpload";
+import GoogleConfig from "./pages/GoogleConfig";
 import Auth from "./pages/Auth";
 import { useEffect, useState } from "react";
 import { supabase } from "./integrations/supabase/client";
@@ -71,6 +72,16 @@ const App = () => {
                 element={
                   session ? (
                     <BulkUpload />
+                  ) : (
+                    <Navigate to="/auth" replace />
+                  )
+                }
+              />
+              <Route
+                path="/google-config"
+                element={
+                  session ? (
+                    <GoogleConfig />
                   ) : (
                     <Navigate to="/auth" replace />
                   )

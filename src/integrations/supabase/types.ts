@@ -9,6 +9,47 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      google_credentials: {
+        Row: {
+          client_email: string
+          created_at: string
+          id: string
+          private_key: string
+          project_id: string
+          status: Database["public"]["Enums"]["credential_status"] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_email: string
+          created_at?: string
+          id?: string
+          private_key: string
+          project_id: string
+          status?: Database["public"]["Enums"]["credential_status"] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_email?: string
+          created_at?: string
+          id?: string
+          private_key?: string
+          project_id?: string
+          status?: Database["public"]["Enums"]["credential_status"] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_credentials_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -76,6 +117,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      credential_status: "pending" | "active" | "invalid"
       url_status: "pending" | "success" | "failed"
     }
     CompositeTypes: {
