@@ -33,9 +33,9 @@ export default function GoogleConfig() {
       const { data, error } = await supabase
         .from('google_credentials')
         .select('*')
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') {
+      if (error) {
         throw error;
       }
 
@@ -166,7 +166,7 @@ export default function GoogleConfig() {
               Create a service account and download the JSON credentials file:
             </p>
             <ol className="list-decimal list-inside space-y-2 ml-4 text-gray-600">
-                <li>Go to "IAM & Admin" {'->'} "Service Accounts"</li>
+                <li>Go to "IAM & Admin" -> "Service Accounts"</li>
                 <li>Click "Create Service Account"</li>
                 <li>Fill in the service account details</li>
                 <li>Grant "Owner" role to the service account</li>
