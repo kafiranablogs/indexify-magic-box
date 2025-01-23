@@ -12,6 +12,6 @@ port = 54322
 enabled = true
 port = 54323
 
-[[functions]]
-name = "google-indexing"
+[functions]
+[functions.google-indexing]
 verify_jwt = true
