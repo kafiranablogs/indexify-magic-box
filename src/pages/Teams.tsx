@@ -1,27 +1,18 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Users, ChevronDown, ChevronUp } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
-import { TeamMembers } from "@/components/TeamMembers";
+import { CreateTeamForm } from "@/components/teams/CreateTeamForm";
+import { TeamCard } from "@/components/teams/TeamCard";
 
 type Team = Tables<"teams">;
 
 export default function Teams() {
   const [teams, setTeams] = useState<Team[]>([]);
-  const [newTeamName, setNewTeamName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [isCreating, setIsCreating] = useState(false);
-  const [expandedTeamId, setExpandedTeamId] = useState<string | null>(null);
   const { toast } = useToast();
-
-  useEffect(() => {
-    fetchTeams();
-  }, []);
 
   const fetchTeams = async () => {
     try {
@@ -46,45 +37,9 @@ export default function Teams() {
     }
   };
 
-  const createTeam = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTeamName.trim()) return;
-
-    setIsCreating(true);
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-
-      const { data: team, error } = await supabase
-        .from('teams')
-        .insert([
-          { name: newTeamName.trim(), owner_id: session.user.id }
-        ])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setTeams([...teams, team]);
-      setNewTeamName("");
-      toast({
-        title: "Team created",
-        description: "Your new team has been created successfully.",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error creating team",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsCreating(false);
-    }
-  };
-
-  const toggleTeam = (teamId: string) => {
-    setExpandedTeamId(expandedTeamId === teamId ? null : teamId);
-  };
+  useEffect(() => {
+    fetchTeams();
+  }, []);
 
   if (isLoading) {
     return (
@@ -100,61 +55,11 @@ export default function Teams() {
         <h1 className="text-3xl font-bold">Teams</h1>
       </div>
 
-      <Card className="p-6">
-        <form onSubmit={createTeam} className="space-y-4">
-          <h2 className="text-xl font-bold">Create New Team</h2>
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <Label htmlFor="teamName">Team Name</Label>
-              <Input
-                id="teamName"
-                value={newTeamName}
-                onChange={(e) => setNewTeamName(e.target.value)}
-                placeholder="Enter team name"
-              />
-            </div>
-            <Button 
-              type="submit" 
-              disabled={isCreating || !newTeamName.trim()}
-              className="self-end"
-            >
-              {isCreating ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create Team
-                </>
-              )}
-            </Button>
-          </div>
-        </form>
-      </Card>
+      <CreateTeamForm onTeamCreated={fetchTeams} />
 
       <div className="grid gap-4">
         {teams.map((team) => (
-          <Card key={team.id} className="p-6">
-            <div className="space-y-4">
-              <div 
-                className="flex items-center justify-between cursor-pointer"
-                onClick={() => toggleTeam(team.id)}
-              >
-                <div className="flex items-center gap-3">
-                  <Users className="h-5 w-5 text-muted-foreground" />
-                  <h3 className="text-lg font-semibold">{team.name}</h3>
-                </div>
-                {expandedTeamId === team.id ? (
-                  <ChevronUp className="h-5 w-5" />
-                ) : (
-                  <ChevronDown className="h-5 w-5" />
-                )}
-              </div>
-              
-              {expandedTeamId === team.id && (
-                <TeamMembers teamId={team.id} />
-              )}
-            </div>
-          </Card>
+          <TeamCard key={team.id} team={team} />
         ))}
         {teams.length === 0 && (
           <Card className="p-6">
