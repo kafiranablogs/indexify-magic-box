@@ -4,9 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Users } from "lucide-react";
+import { Loader2, Plus, Users, ChevronDown, ChevronUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
+import { TeamMembers } from "@/components/TeamMembers";
 
 type Team = Tables<"teams">;
 
@@ -15,6 +16,7 @@ export default function Teams() {
   const [newTeamName, setNewTeamName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
+  const [expandedTeamId, setExpandedTeamId] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -80,6 +82,10 @@ export default function Teams() {
     }
   };
 
+  const toggleTeam = (teamId: string) => {
+    setExpandedTeamId(expandedTeamId === teamId ? null : teamId);
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -128,12 +134,25 @@ export default function Teams() {
       <div className="grid gap-4">
         {teams.map((team) => (
           <Card key={team.id} className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Users className="h-5 w-5 text-muted-foreground" />
-                <h3 className="text-lg font-semibold">{team.name}</h3>
+            <div className="space-y-4">
+              <div 
+                className="flex items-center justify-between cursor-pointer"
+                onClick={() => toggleTeam(team.id)}
+              >
+                <div className="flex items-center gap-3">
+                  <Users className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="text-lg font-semibold">{team.name}</h3>
+                </div>
+                {expandedTeamId === team.id ? (
+                  <ChevronUp className="h-5 w-5" />
+                ) : (
+                  <ChevronDown className="h-5 w-5" />
+                )}
               </div>
-              <Button variant="outline">Manage Team</Button>
+              
+              {expandedTeamId === team.id && (
+                <TeamMembers teamId={team.id} />
+              )}
             </div>
           </Card>
         ))}
