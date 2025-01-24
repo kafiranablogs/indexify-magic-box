@@ -1,4 +1,4 @@
-import { BarChart, Link, Upload, Settings, User } from "lucide-react";
+import { BarChart, Link, Upload, Settings, User, Users } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,6 +16,7 @@ const menuItems = [
   { title: "Single URL", icon: Link, path: "/single-url" },
   { title: "Bulk Upload", icon: Upload, path: "/bulk-upload" },
   { title: "Google Config", icon: Settings, path: "/google-config" },
+  { title: "Teams", icon: Users, path: "/teams" },
   { title: "Profile", icon: User, path: "/profile" },
 ];
 

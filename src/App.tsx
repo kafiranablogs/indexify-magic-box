@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import SingleUrl from "./pages/SingleUrl";
 import BulkUpload from "./pages/BulkUpload";
 import GoogleConfig from "./pages/GoogleConfig";
+import Teams from "./pages/Teams";
 import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import { useEffect, useState } from "react";
@@ -83,6 +84,16 @@ const App = () => {
                 element={
                   session ? (
                     <GoogleConfig />
+                  ) : (
+                    <Navigate to="/auth" replace />
+                  )
+                }
+              />
+              <Route
+                path="/teams"
+                element={
+                  session ? (
+                    <Teams />
                   ) : (
                     <Navigate to="/auth" replace />
                   )
