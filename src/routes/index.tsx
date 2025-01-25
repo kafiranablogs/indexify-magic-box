@@ -11,7 +11,11 @@ import Landing from "@/pages/Landing";
 export const getRoutes = (session: any) => [
   {
     path: "/",
-    element: session ? <Dashboard /> : <Landing />,
+    element: <Landing />,
+  },
+  {
+    path: "/dashboard",
+    element: session ? <Dashboard /> : <Navigate to="/auth" replace />,
   },
   {
     path: "/single-url",
@@ -35,6 +39,6 @@ export const getRoutes = (session: any) => [
   },
   {
     path: "/auth",
-    element: !session ? <Auth /> : <Navigate to="/" replace />,
+    element: !session ? <Auth /> : <Navigate to="/dashboard" replace />,
   },
 ];
