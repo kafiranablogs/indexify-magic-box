@@ -6,11 +6,12 @@ import GoogleConfig from "@/pages/GoogleConfig";
 import Teams from "@/pages/Teams";
 import Profile from "@/pages/Profile";
 import Auth from "@/pages/Auth";
+import Landing from "@/pages/Landing";
 
 export const getRoutes = (session: any) => [
   {
     path: "/",
-    element: session ? <Dashboard /> : <Navigate to="/auth" replace />,
+    element: session ? <Dashboard /> : <Landing />,
   },
   {
     path: "/single-url",
