@@ -10,6 +10,25 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Check if user is authenticated
+  const [session, setSession] = useState<any>(null);
+
+  useEffect(() => {
+    // Get current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
@@ -27,6 +46,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // If not authenticated, just render the content without sidebar
+  if (!session) {
+    return <main className="flex-1 p-6">{children}</main>;
+  }
+
+  // If authenticated, render with sidebar and logout button
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
