@@ -23,8 +23,10 @@ export function NavigationMenu({ items }: NavigationMenuProps) {
   return (
     <SidebarMenu>
       {items.map((item) => {
-        const isActive = location.pathname === item.path || 
-          (item.path === "/dashboard" && location.pathname === "/");
+        const isActive = 
+          location.pathname === item.path || 
+          (location.pathname === "/" && item.path === "/") ||
+          (location.pathname === "/dashboard" && item.path === "/");
         
         return (
           <SidebarMenuItem key={item.title}>
@@ -35,13 +37,15 @@ export function NavigationMenu({ items }: NavigationMenuProps) {
               <Link 
                 to={item.path} 
                 className={cn(
-                  "flex items-center",
-                  isActive && "font-medium"
+                  "flex items-center rounded-md transition-colors",
+                  isActive 
+                    ? "bg-[#1A1F2C] text-white font-medium" 
+                    : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 )}
               >
                 <item.icon className={cn(
                   "w-4 h-4 mr-2",
-                  isActive && "text-primary"
+                  isActive ? "text-white" : "text-sidebar-foreground"
                 )} />
                 <span>{item.title}</span>
               </Link>
