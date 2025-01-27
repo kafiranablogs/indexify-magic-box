@@ -11,7 +11,7 @@ import Landing from "@/pages/Landing";
 export const getRoutes = (session: any) => [
   {
     path: "/",
-    element: <Landing />,
+    element: session ? <Navigate to="/dashboard" replace /> : <Landing />,
   },
   {
     path: "/dashboard",
