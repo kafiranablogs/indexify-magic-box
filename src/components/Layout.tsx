@@ -1,18 +1,41 @@
 import { useState, useEffect } from "react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const location = useLocation();
+  const { state } = useSidebar();
 
   // Check if user is authenticated
   const [session, setSession] = useState<any>(null);
+
+  // Get current page title based on route
+  const getCurrentPageTitle = () => {
+    switch (location.pathname) {
+      case "/":
+      case "/dashboard":
+        return "Dashboard";
+      case "/single-url":
+        return "Single URL";
+      case "/bulk-upload":
+        return "Bulk Upload";
+      case "/google-config":
+        return "Google Config";
+      case "/teams":
+        return "Teams";
+      case "/profile":
+        return "Profile";
+      default:
+        return "";
+    }
+  };
 
   useEffect(() => {
     // Get current session
@@ -59,7 +82,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <AppSidebar />
         <main className="flex-1 p-6">
           <div className="flex justify-between items-center mb-4">
-            <SidebarTrigger />
+            <div className="flex items-center gap-4">
+              <SidebarTrigger />
+              {state === "collapsed" && (
+                <h1 className="text-xl font-semibold">{getCurrentPageTitle()}</h1>
+              )}
+            </div>
             <Button
               variant="outline"
               onClick={handleLogout}

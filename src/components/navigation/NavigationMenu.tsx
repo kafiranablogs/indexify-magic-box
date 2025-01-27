@@ -5,6 +5,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 interface NavigationItem {
   title: string;
@@ -21,19 +22,33 @@ export function NavigationMenu({ items }: NavigationMenuProps) {
 
   return (
     <SidebarMenu>
-      {items.map((item) => (
-        <SidebarMenuItem key={item.title}>
-          <SidebarMenuButton
-            asChild
-            isActive={location.pathname === item.path}
-          >
-            <Link to={item.path} className="flex items-center">
-              <item.icon className="w-4 h-4 mr-2" />
-              <span>{item.title}</span>
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      ))}
+      {items.map((item) => {
+        const isActive = location.pathname === item.path || 
+          (item.path === "/dashboard" && location.pathname === "/");
+        
+        return (
+          <SidebarMenuItem key={item.title}>
+            <SidebarMenuButton
+              asChild
+              isActive={isActive}
+            >
+              <Link 
+                to={item.path} 
+                className={cn(
+                  "flex items-center",
+                  isActive && "font-medium"
+                )}
+              >
+                <item.icon className={cn(
+                  "w-4 h-4 mr-2",
+                  isActive && "text-primary"
+                )} />
+                <span>{item.title}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        );
+      })}
     </SidebarMenu>
   );
 }
