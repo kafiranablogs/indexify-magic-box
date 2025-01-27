@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
@@ -77,29 +77,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   // If authenticated, render with sidebar and logout button
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <AppSidebar />
-        <main className="flex-1 p-6">
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-4">
-              <SidebarTrigger />
-              {state === "collapsed" && (
-                <h1 className="text-xl font-semibold">{getCurrentPageTitle()}</h1>
-              )}
-            </div>
-            <Button
-              variant="outline"
-              onClick={handleLogout}
-              className="gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </Button>
+    <div className="min-h-screen flex w-full">
+      <AppSidebar />
+      <main className="flex-1 p-6">
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center gap-4">
+            <SidebarTrigger />
+            {state === "collapsed" && (
+              <h1 className="text-xl font-semibold">{getCurrentPageTitle()}</h1>
+            )}
           </div>
-          {children}
-        </main>
-      </div>
-    </SidebarProvider>
+          <Button
+            variant="outline"
+            onClick={handleLogout}
+            className="gap-2"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
+          </Button>
+        </div>
+        {children}
+      </main>
+    </div>
   );
 }
