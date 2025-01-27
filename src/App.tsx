@@ -4,6 +4,7 @@ import { getRoutes } from "@/routes";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { useEffect, useState } from "react";
 import { supabase } from "./integrations/supabase/client";
+import { Layout } from "@/components/Layout";
 import "./App.css";
 
 function App() {
@@ -36,15 +37,17 @@ function App() {
   return (
     <Router>
       <SidebarProvider>
-        <Routes>
-          {routes.map((route) => (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={route.element}
-            />
-          ))}
-        </Routes>
+        <Layout>
+          <Routes>
+            {routes.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={route.element}
+              />
+            ))}
+          </Routes>
+        </Layout>
         <Toaster />
       </SidebarProvider>
     </Router>
