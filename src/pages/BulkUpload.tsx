@@ -48,26 +48,42 @@ export default function BulkUpload() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Bulk URL Upload</h1>
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold">Bulk URL Upload</h1>
+        <p className="text-muted-foreground">
+          Submit multiple URLs for indexing at once. Each URL should be on a new line.
+        </p>
+      </div>
       
       <Card className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="urls" className="text-sm font-medium">
-              URLs to Index (one per line)
-            </label>
-            <Textarea
-              id="urls"
-              placeholder="https://example.com/page-1&#10;https://example.com/page-2&#10;https://example.com/page-3"
-              value={urls}
-              onChange={(e) => setUrls(e.target.value)}
-              className="min-h-[200px]"
-            />
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="urls" className="text-sm font-medium">
+                URLs to Index (one per line)
+              </label>
+              <div className="text-sm text-muted-foreground space-y-2">
+                <p>Accepted URL formats:</p>
+                <ul className="list-disc pl-4 space-y-1">
+                  <li>Full URLs with protocol (https:// or http://)</li>
+                  <li>Example: https://example.com/page-1</li>
+                  <li>Each URL must be on a new line</li>
+                  <li>URLs must be publicly accessible</li>
+                </ul>
+              </div>
+              <Textarea
+                id="urls"
+                placeholder="https://example.com/page-1&#10;https://example.com/page-2&#10;https://example.com/page-3"
+                value={urls}
+                onChange={(e) => setUrls(e.target.value)}
+                className="min-h-[200px]"
+              />
+            </div>
           </div>
           
           <Button 
             type="submit" 
-            className="w-full"
+            className="w-full bg-[#1A1F2C] text-white hover:bg-[#2A2F3C]"
             disabled={isLoading}
           >
             {isLoading ? (

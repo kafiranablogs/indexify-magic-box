@@ -31,7 +31,7 @@ export default {
           green: "#0F9D58",
         },
         primary: {
-          DEFAULT: "#4285F4",
+          DEFAULT: "#1A1F2C",
           foreground: "#FFFFFF",
         },
         secondary: {
