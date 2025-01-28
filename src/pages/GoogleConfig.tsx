@@ -124,6 +124,60 @@ export default function GoogleConfig() {
       </div>
 
       <Card className="p-6">
+        <h2 className="text-xl font-bold mb-4">Enter Your Credentials</h2>
+        <p className="text-gray-600 mb-4">
+          Enter the details from your downloaded service account JSON file:
+        </p>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="projectId">Project ID</Label>
+            <Input
+              id="projectId"
+              value={projectId}
+              onChange={(e) => setProjectId(e.target.value)}
+              placeholder="your-project-123"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="clientEmail">Client Email</Label>
+            <Input
+              id="clientEmail"
+              value={clientEmail}
+              onChange={(e) => setClientEmail(e.target.value)}
+              placeholder="your-service-account@your-project-123.iam.gserviceaccount.com"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="privateKey">Private Key</Label>
+            <Input
+              id="privateKey"
+              type="password"
+              value={privateKey}
+              onChange={(e) => setPrivateKey(e.target.value)}
+              placeholder="Enter your private key"
+            />
+          </div>
+          
+          <Button 
+            type="submit" 
+            className="w-full"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Credentials"
+            )}
+          </Button>
+        </form>
+      </Card>
+
+      <Card className="p-6">
         <h2 className="text-xl font-bold mb-4">Step-by-Step Setup Guide</h2>
         <div className="space-y-6">
           <div className="space-y-2">
@@ -183,60 +237,6 @@ export default function GoogleConfig() {
             </a>
           </div>
         </div>
-      </Card>
-      
-      <Card className="p-6">
-        <h2 className="text-xl font-bold mb-4">Enter Your Credentials</h2>
-        <p className="text-gray-600 mb-4">
-          Enter the details from your downloaded service account JSON file:
-        </p>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="projectId">Project ID</Label>
-            <Input
-              id="projectId"
-              value={projectId}
-              onChange={(e) => setProjectId(e.target.value)}
-              placeholder="your-project-123"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="clientEmail">Client Email</Label>
-            <Input
-              id="clientEmail"
-              value={clientEmail}
-              onChange={(e) => setClientEmail(e.target.value)}
-              placeholder="your-service-account@your-project-123.iam.gserviceaccount.com"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="privateKey">Private Key</Label>
-            <Input
-              id="privateKey"
-              type="password"
-              value={privateKey}
-              onChange={(e) => setPrivateKey(e.target.value)}
-              placeholder="Enter your private key"
-            />
-          </div>
-          
-          <Button 
-            type="submit" 
-            className="w-full"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              "Save Credentials"
-            )}
-          </Button>
-        </form>
       </Card>
 
       <Card className="p-6">

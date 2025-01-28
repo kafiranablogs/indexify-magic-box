@@ -54,32 +54,6 @@ export default function BulkUpload() {
           Submit multiple URLs for indexing at once. Each URL should be on a new line.
         </p>
       </div>
-
-      <Card className="p-6 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800">
-        <div className="space-y-4">
-          <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
-            <h3 className="font-semibold text-lg mb-2">Accepted URL Format Guidelines</h3>
-            <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
-              <li className="flex items-center">
-                <span className="mr-2">•</span>
-                Each URL must be on a new line
-              </li>
-              <li className="flex items-center">
-                <span className="mr-2">•</span>
-                URLs must include the full protocol (https:// or http://)
-              </li>
-              <li className="flex items-center">
-                <span className="mr-2">•</span>
-                URLs must be publicly accessible
-              </li>
-              <li className="flex items-center">
-                <span className="mr-2">•</span>
-                Example: https://example.com/page-1
-              </li>
-            </ul>
-          </div>
-        </div>
-      </Card>
       
       <Card className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -96,6 +70,32 @@ export default function BulkUpload() {
               />
             </div>
           </div>
+
+          <Card className="p-6 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+            <div className="space-y-4">
+              <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                <h3 className="font-semibold text-lg mb-2">Accepted URL Format Guidelines</h3>
+                <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                  <li className="flex items-center">
+                    <span className="mr-2">•</span>
+                    Each URL must be on a new line
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-2">•</span>
+                    URLs must include the full protocol (https:// or http://)
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-2">•</span>
+                    URLs must be publicly accessible
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-2">•</span>
+                    Example: https://example.com/page-1
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </Card>
           
           <Button 
             type="submit" 
