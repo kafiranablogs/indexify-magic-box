@@ -39,7 +39,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Get current session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error("Error fetching session:", error);
+        return;
+      }
       setSession(session);
     });
 
@@ -56,12 +60,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      navigate("/");
+      // Clear any local storage that might be causing issues
+      localStorage.removeItem('supabase.auth.token');
+      navigate('/auth');
       toast({
         title: "Logged out successfully",
         description: "You have been logged out of your account.",
       });
     } catch (error) {
+      console.error("Error during logout:", error);
       toast({
         variant: "destructive",
         title: "Error logging out",
