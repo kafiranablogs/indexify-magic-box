@@ -47,36 +47,52 @@ export default function BulkUpload() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">Bulk URL Upload</h1>
         <p className="text-muted-foreground">
           Submit multiple URLs for indexing at once. Each URL should be on a new line.
         </p>
       </div>
+
+      <Card className="p-6 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+        <div className="space-y-4">
+          <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+            <h3 className="font-semibold text-lg mb-2">Accepted URL Format Guidelines</h3>
+            <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+              <li className="flex items-center">
+                <span className="mr-2">•</span>
+                Each URL must be on a new line
+              </li>
+              <li className="flex items-center">
+                <span className="mr-2">•</span>
+                URLs must include the full protocol (https:// or http://)
+              </li>
+              <li className="flex items-center">
+                <span className="mr-2">•</span>
+                URLs must be publicly accessible
+              </li>
+              <li className="flex items-center">
+                <span className="mr-2">•</span>
+                Example: https://example.com/page-1
+              </li>
+            </ul>
+          </div>
+        </div>
+      </Card>
       
       <Card className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="urls" className="text-sm font-medium">
-                URLs to Index (one per line)
+                URLs to Index
               </label>
-              <div className="text-sm text-muted-foreground space-y-2">
-                <p>Accepted URL formats:</p>
-                <ul className="list-disc pl-4 space-y-1">
-                  <li>Full URLs with protocol (https:// or http://)</li>
-                  <li>Example: https://example.com/page-1</li>
-                  <li>Each URL must be on a new line</li>
-                  <li>URLs must be publicly accessible</li>
-                </ul>
-              </div>
               <Textarea
                 id="urls"
-                placeholder="https://example.com/page-1&#10;https://example.com/page-2&#10;https://example.com/page-3"
                 value={urls}
                 onChange={(e) => setUrls(e.target.value)}
-                className="min-h-[200px]"
+                className="min-h-[200px] font-mono text-sm"
               />
             </div>
           </div>
