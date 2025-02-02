@@ -110,15 +110,18 @@ export default function Landing() {
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 animate-[bounce_2s_infinite] transition-colors duration-300" 
               style={{
                 color: 'var(--globe-color, #1A1F2C)',
-                animation: 'bounce 2s infinite, colorChange 4s infinite'
+                animation: 'bounce 2s infinite, colorChange 2s infinite'
               }}
             />
             <style>
               {`
+                @keyframes bounce {
+                  0%, 100% { transform: translate(-50%, -50%); }
+                  50% { transform: translate(-50%, -65%); }
+                }
                 @keyframes colorChange {
-                  0% { --globe-color: #1A1F2C; }
+                  0%, 100% { --globe-color: #1A1F2C; }
                   50% { --globe-color: #F4B400; }
-                  100% { --globe-color: #1A1F2C; }
                 }
               `}
             </style>
