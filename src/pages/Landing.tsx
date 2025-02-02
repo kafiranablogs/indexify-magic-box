@@ -113,13 +113,15 @@ export default function Landing() {
                 animation: 'bounce 2s infinite, colorChange 4s infinite'
               }}
             />
-            <style jsx global>{`
-              @keyframes colorChange {
-                0% { --globe-color: #1A1F2C; }
-                50% { --globe-color: #F4B400; }
-                100% { --globe-color: #1A1F2C; }
-              }
-            `}</style>
+            <style>
+              {`
+                @keyframes colorChange {
+                  0% { --globe-color: #1A1F2C; }
+                  50% { --globe-color: #F4B400; }
+                  100% { --globe-color: #1A1F2C; }
+                }
+              `}
+            </style>
           </motion.div>
         </div>
       </motion.div>
