@@ -106,7 +106,20 @@ export default function Landing() {
             className="relative"
           >
             <div className="aspect-square rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 animate-pulse" />
-            <Globe className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 text-primary animate-bounce" />
+            <Globe 
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 animate-[bounce_2s_infinite] transition-colors duration-300" 
+              style={{
+                color: 'var(--globe-color, #1A1F2C)',
+                animation: 'bounce 2s infinite, colorChange 4s infinite'
+              }}
+            />
+            <style jsx global>{`
+              @keyframes colorChange {
+                0% { --globe-color: #1A1F2C; }
+                50% { --globe-color: #F4B400; }
+                100% { --globe-color: #1A1F2C; }
+              }
+            `}</style>
           </motion.div>
         </div>
       </motion.div>
