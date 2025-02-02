@@ -62,7 +62,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       await supabase.auth.signOut();
       // Clear any local storage that might be causing issues
       localStorage.removeItem('supabase.auth.token');
-      navigate('/auth');
+      navigate('/'); // Changed from '/auth' to '/'
       toast({
         title: "Logged out successfully",
         description: "You have been logged out of your account.",

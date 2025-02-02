@@ -35,7 +35,7 @@ function App() {
       if (_event === 'SIGNED_OUT') {
         // Clear any local storage or state that might be causing issues
         localStorage.removeItem('supabase.auth.token');
-        window.location.href = '/auth'; // Force a full page reload to clear all states
+        window.location.href = '/'; // Changed from '/auth' to '/'
         return;
       }
       
