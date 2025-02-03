@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -10,10 +10,11 @@ import { useNavigate } from "react-router-dom";
 export default function SingleUrl() {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [hasGoogleCredentials, setHasGoogleCredentials] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Check authentication status
+  // Check authentication and Google credentials status
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -24,6 +25,20 @@ export default function SingleUrl() {
           variant: "destructive",
         });
         navigate("/auth");
+        return;
+      }
+
+      // Check if user has valid Google credentials
+      const { data: credentials, error } = await supabase
+        .from('google_credentials')
+        .select('status')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (error) {
+        console.error('Error checking Google credentials:', error);
+      } else {
+        setHasGoogleCredentials(credentials?.status === 'active');
       }
     };
     
@@ -63,7 +78,19 @@ export default function SingleUrl() {
         throw new Error("No authenticated user found");
       }
 
-      const { error } = await supabase
+      // Check for Google credentials before submission
+      if (!hasGoogleCredentials) {
+        toast({
+          title: "Google credentials required",
+          description: "Please configure your Google Indexing API credentials first",
+          variant: "destructive",
+        });
+        navigate("/google-config");
+        return;
+      }
+
+      // Try to insert the URL
+      const { error: insertError } = await supabase
         .from('url_submissions')
         .insert({
           url,
@@ -71,7 +98,25 @@ export default function SingleUrl() {
           status: 'pending'
         });
 
-      if (error) throw error;
+      if (insertError) {
+        // Handle duplicate URL error
+        if (insertError.code === '23505') {
+          toast({
+            title: "Duplicate URL",
+            description: "This URL has already been submitted for indexing",
+            variant: "destructive",
+          });
+          return;
+        }
+        throw insertError;
+      }
+
+      // Trigger the indexing process via Edge Function
+      const { error: indexingError } = await supabase.functions.invoke('google-indexing', {
+        body: { url }
+      });
+
+      if (indexingError) throw indexingError;
 
       toast({
         title: "Success",
@@ -79,6 +124,7 @@ export default function SingleUrl() {
       });
       setUrl("");
     } catch (error: any) {
+      console.error('Error submitting URL:', error);
       toast({
         title: "Error",
         description: error.message || "Failed to submit URL for indexing",
@@ -93,6 +139,24 @@ export default function SingleUrl() {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Submit Single URL</h1>
       
+      {!hasGoogleCredentials && (
+        <Card className="p-6 bg-yellow-50 border-yellow-200">
+          <div className="space-y-2">
+            <h2 className="text-lg font-semibold text-yellow-800">Google Credentials Required</h2>
+            <p className="text-yellow-700">
+              To submit URLs for indexing, you need to configure your Google Indexing API credentials first.
+            </p>
+            <Button 
+              variant="outline" 
+              onClick={() => navigate("/google-config")}
+              className="mt-2"
+            >
+              Configure Google Credentials
+            </Button>
+          </div>
+        </Card>
+      )}
+
       <Card className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -106,13 +170,14 @@ export default function SingleUrl() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               className="w-full"
+              disabled={!hasGoogleCredentials}
             />
           </div>
           
           <Button 
             type="submit" 
             className="w-full"
-            disabled={isLoading}
+            disabled={isLoading || !hasGoogleCredentials}
           >
             {isLoading ? (
               <>
